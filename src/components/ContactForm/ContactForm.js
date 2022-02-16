@@ -1,21 +1,26 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addContact } from "../../redux/operations";
-import { getContactsItems } from "../../redux/selectors";
-import "./ContactForm.module.css";
+import { useState } from 'react';
+import {
+  useAddContactsMutation,
+  useFetchContactsQuery,
+} from '../../redux/slice';
+import toast, { Toaster } from 'react-hot-toast';
+import { Form, Label, Input, Button } from './ContactForm.styled';
 
-function ContactForm() {
-  const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
-  const handleInputChange = (e) => {
-    const { name, value } = e.currentTarget;
+export default function ContactForm() {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const [addContact] = useAddContactsMutation();
+  const { data: contacts } = useFetchContactsQuery();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
     switch (name) {
-      case "name":
+      case 'name':
         setName(value);
         break;
-      case "number":
+      case 'number':
         setNumber(value);
         break;
       default:
@@ -23,57 +28,147 @@ function ContactForm() {
     }
   };
 
-  const contacts = useSelector((state) => getContactsItems(state));
-
-  const isContactExist = () => {
-    const normalizedFilter = name.toLowerCase();
-    return contacts.find(
-      (contact) => contact.name.toLowerCase() === normalizedFilter
-    );
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name.trim() === "" || number.trim() === "") {
-      alert("Fill all fields!");
-      return;
-    }
-    const existContact = isContactExist();
-    if (existContact) {
-      alert(`${existContact.name} is already in contacts.`);
-      return;
-    }
-    dispatch(addContact({ name, number }));
 
-    setName("");
-    setNumber("");
+    const contactContent = {
+      name,
+      number,
+    };
+
+    if (
+      contacts.find(
+        (contact) => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      toast.error(`${name} is already on contacts`);
+      return;
+    }
+
+    if (contacts.find((contact) => contact.number === number)) {
+      toast.error(`${number} is already on contacts`);
+      return;
+    }
+
+    addContact(contactContent);
+    toast.success('Your contact was add successfully!');
+
+    setName('');
+    setNumber('');
   };
 
   return (
-    <form className="Form" onSubmit={handleSubmit}>
-      <label className="Form-label">
-        Name
-        <input
-          className="Form-input"
-          type="text"
-          name="name"
-          value={name}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label className="Form-label">
-        Number
-        <input
-          className="Form-input"
-          type="text"
-          name="number"
-          value={number}
-          onChange={handleInputChange}
-        />
-      </label>
-      <button type="submit">Add contact</button>
-    </form>
+    <>
+      <Toaster />
+      <Form onSubmit={handleSubmit}>
+        <Label>
+          Name
+          <Input
+            type="text"
+            name="name"
+            value={name}
+            onChange={handleChange}
+            placeholder="Rosie Simpson"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+          />
+        </Label>
+        <Label>
+          Number
+          <Input
+            type="tel"
+            name="number"
+            value={number}
+            onChange={handleChange}
+            placeholder="+380-00-000-00-00"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+          />
+        </Label>
+        <Button type="submit">Add contact</Button>
+      </Form>
+    </>
   );
 }
 
-export default ContactForm;
+// import { useState } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import { addContact } from "../../redux/operations";
+// import { getContactsItems } from "../../redux/selectors";
+// import "./ContactForm.module.css";
+
+// function ContactForm() {
+//   const dispatch = useDispatch();
+//   const [name, setName] = useState("");
+//   const [number, setNumber] = useState("");
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.currentTarget;
+
+//     switch (name) {
+//       case "name":
+//         setName(value);
+//         break;
+//       case "number":
+//         setNumber(value);
+//         break;
+//       default:
+//         return;
+//     }
+//   };
+
+//   const contacts = useSelector((state) => getContactsItems(state));
+
+//   const isContactExist = () => {
+//     const normalizedFilter = name.toLowerCase();
+//     return contacts.find(
+//       (contact) => contact.name.toLowerCase() === normalizedFilter
+//     );
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (name.trim() === "" || number.trim() === "") {
+//       alert("Fill all fields!");
+//       return;
+//     }
+//     const existContact = isContactExist();
+//     if (existContact) {
+//       alert(`${existContact.name} is already in contacts.`);
+//       return;
+//     }
+//     dispatch(addContact({ name, number }));
+
+//     setName("");
+//     setNumber("");
+//   };
+
+//   return (
+//     <form className="Form" onSubmit={handleSubmit}>
+//       <label className="Form-label">
+//         Name
+//         <input
+//           className="Form-input"
+//           type="text"
+//           name="name"
+//           value={name}
+//           onChange={handleInputChange}
+//         />
+//       </label>
+//       <label className="Form-label">
+//         Number
+//         <input
+//           className="Form-input"
+//           type="text"
+//           name="number"
+//           value={number}
+//           onChange={handleInputChange}
+//         />
+//       </label>
+//       <button type="submit">Add contact</button>
+//     </form>
+//   );
+// }
+
+// export default ContactForm;
