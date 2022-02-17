@@ -17,7 +17,7 @@ export default function Filter() {
         name="filter"
         value={value}
         onChange={onChange}
-        placeholder="Rosie Simpson"
+        placeholder="Ivanov Ivan"
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
@@ -25,20 +25,3 @@ export default function Filter() {
     </Label>
   );
 }
-
-// import { useDispatch } from "react-redux";
-// import { filterContact } from "../../redux/actions";
-
-// const Filter = () => {
-//   const dispatch = useDispatch();
-
-//   const onFilter = (event) => dispatch(filterContact(event.target.value));
-
-//   return (
-//     <label>
-//       <input type="text" name="filter" onChange={onFilter} />
-//     </label>
-//   );
-// };
-
-// export default Filter;

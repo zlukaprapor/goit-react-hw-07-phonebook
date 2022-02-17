@@ -32,7 +32,8 @@ export const Button = styled.button`
   font-size: 12px;
   text-transform: capitalize;
   color: #000000;
-  box-shadow: 1px 1px 1px 1px #9c0b3c;
+  background-color: #d6cbcb;
+  // box-shadow: 1px 1px 1px 1px #9c0b3c;
   cursor: pointer;
   transition: all 250ms linear;
   &:hover {

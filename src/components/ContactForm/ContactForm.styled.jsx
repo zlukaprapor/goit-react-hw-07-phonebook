@@ -43,7 +43,8 @@ export const Button = styled.button`
   font-size: 16px;
   text-transform: capitalize;
   color: #000000;
-  box-shadow: 1px 1px 1px 1px #9c0b3c;
+  background-color: #d6cbcb;
+  // box-shadow: 1px 1px 1px 1px #9c0b3c;
   cursor: pointer;
   transition: all 250ms linear;
   &:hover {
@@ -51,7 +52,7 @@ export const Button = styled.button`
     background-color: #000000;
     border-color: #9c0b3c;
     color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
     transition: all 250ms linear;
   }
 `;
